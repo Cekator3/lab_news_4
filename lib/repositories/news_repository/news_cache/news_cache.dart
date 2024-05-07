@@ -41,7 +41,7 @@ class NewsCache
   /// Adds [news]
   ///
   /// If [news] already exists, it will be ignored.
-	void add(List<NewsDetails> news)
+	Future<void> add(List<NewsDetails> news) async
   {
     for (NewsDetails newsItem in news)
     {
@@ -52,13 +52,13 @@ class NewsCache
       _news.add(newsItem);
     }
 
-    _storage!.set(_news);
+    await _storage!.set(_news);
   }
 
   /// Updates certain news
   ///
   /// If [newsItem] not exists, nothing will happen.
-  void update(NewsDetails newsItem)
+  Future<void> update(NewsDetails newsItem) async
   {
     if (! _exists(newsItem))
       return;
@@ -66,6 +66,6 @@ class NewsCache
     int i = _news.indexWhere((item) => item.getId() == newsItem.getId());
     _news[i].markAsWatched();
 
-    _storage!.set(_news);
+    await _storage!.set(_news);
   }
 }

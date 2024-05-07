@@ -5,6 +5,11 @@ import '../enums/news_channel.dart';
 /// TODO speed improve: removeWhere with all conditions that user needs
 class NewsFilter
 {
+  void byQuery(List<NewsListItem> news, String query)
+  {
+    // ...
+  }
+
   void byChannel(List<NewsListItem> news, NewsChannel channel)
   {
     news.removeWhere((newsItem) => newsItem.getChannel() != channel);
