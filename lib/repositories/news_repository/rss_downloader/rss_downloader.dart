@@ -76,6 +76,7 @@ class RssDownloader
         publishedAt: publishedAt,
         content: content,
         url: url,
+        isWatched: false
       ));
     }
 

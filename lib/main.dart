@@ -98,6 +98,8 @@ class NewsAppState extends State<NewsApp>
 void main() async
 {
   NewsApp app = const NewsApp();
+  runApp(app);
+
   final rss = RssDownloader();
   final errors = RssFetchErrors();
   final news = await rss.fetch(NewsChannel.habr, errors);
@@ -108,7 +110,7 @@ void main() async
 
   final inFile = NewsCacheInFile();
   await inFile.init();
-  inFile.set(news);
-  final newsFromFile = inFile.getAll();
-  runApp(app);
+  await inFile.set(news);
+  final newsFromFile = await inFile.getAll();
+  print('lol');
 }
