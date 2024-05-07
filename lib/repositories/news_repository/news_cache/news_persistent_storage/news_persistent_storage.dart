@@ -1,6 +1,8 @@
 // ignore_for_file: constant_identifier_names, curly_braces_in_flow_control_structures
 
 import 'dart:convert';
+import 'package:lab_news_4/repositories/enums/news_channel.dart';
+
 import '../../DTO/news_details.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -23,6 +25,7 @@ class NewsPersistentStorage
       'id': news.getId(),
       'title': news.getTitle(),
       'author': news.getAuthor(),
+      'channel': news.getChannel().index,
       'publishedAt': news.getPublicationDate().toIso8601String(),
       'content': news.getContent(),
       'url': news.getURL(),
@@ -36,6 +39,7 @@ class NewsPersistentStorage
       id: jsonDecode(json)['id'],
       title: jsonDecode(json)['title'],
       author: jsonDecode(json)['author'],
+      channel: NewsChannel.values[jsonDecode(json)['channel']],
       publishedAt: DateTime.parse(jsonDecode(json)['publishedAt']),
       content: jsonDecode(json)['content'],
       url: jsonDecode(json)['url'],

@@ -56,7 +56,7 @@ class RssDownloader
     return format.parse(dateString);
   }
 
-  List<NewsDetails> _convertToNewsDetails(List<RssItem> rssItems)
+  List<NewsDetails> _convertToNewsDetails(NewsChannel channel, List<RssItem> rssItems)
   {
     List<NewsDetails> result = [];
 
@@ -73,6 +73,7 @@ class RssDownloader
         id: id,
         title: title,
         author: author,
+        channel: channel,
         publishedAt: publishedAt,
         content: content,
         url: url,
@@ -91,6 +92,6 @@ class RssDownloader
     List<RssItem> rssItems = await _getRssItems(channel, errors);
     if (errors.hasAny())
       return [];
-    return _convertToNewsDetails(rssItems);
+    return _convertToNewsDetails(channel, rssItems);
 	}
 }

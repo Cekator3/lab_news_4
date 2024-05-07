@@ -102,7 +102,7 @@ void main() async
 
   final rss = RssDownloader();
   final errors = RssFetchErrors();
-  final news = await rss.fetch(NewsChannel.habr, errors);
+  final news = await rss.fetch(NewsChannel.archLinux, errors);
 
   final cache = NewsCache();
   await cache.init();
