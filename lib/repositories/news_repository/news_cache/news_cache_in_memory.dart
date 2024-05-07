@@ -1,7 +1,17 @@
-import 'news_cache.dart';
+import '../DTO/news_details.dart';
 
 /// A subsystem for interacting with news data stored in memory
-class NewsCacheInMemory extends NewsCache
+class NewsCacheInMemory
 {
-  // ...
+  /// Retrieves all news
+	List<NewsDetails> getAll()
+  {
+    // ...
+  }
+
+  /// Replaces all news
+	void set(List<NewsDetails> news)
+  {
+    // ...
+  }
 }
