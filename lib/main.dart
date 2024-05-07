@@ -1,7 +1,12 @@
 // ignore_for_file: curly_braces_in_flow_control_structures
 
+import 'dart:io';
+
 import 'package:dart_rss/dart_rss.dart';
 import 'package:http/http.dart' as http;
+import 'package:lab_news_4/repositories/enums/news_channel.dart';
+import 'package:lab_news_4/repositories/news_repository/rss_downloader/errors/rss_fetch_errors.dart';
+import 'package:lab_news_4/repositories/news_repository/rss_downloader/rss_downloader.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -94,17 +99,8 @@ class NewsAppState extends State<NewsApp>
 void main() async
 {
   NewsApp app = const NewsApp();
-  final client = http.Client();
-  client.get(Uri.parse('https://habr.com/en/rss/articles/?fl=en')).then((response) {
-    return response.body;
-  }).then((responseBody) {
-    final channel = RssFeed.parse(responseBody);
-    final item = channel.items[0];
-    final author = item.dc!.creator;
-    final date = item.pubDate;
-    final content = item.description;
-    final url = item.link;
-    return channel;
-  });
+  final rss = RssDownloader();
+  final errors = RssFetchErrors();
+  final news = await rss.fetch(NewsChannel.habr, errors);
   runApp(app);
 }
