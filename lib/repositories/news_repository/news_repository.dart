@@ -7,7 +7,7 @@ import 'errors/update_news_errors.dart';
 class NewsRepository
 {
   /// Synchronizes the stored data with the data from news channels
-  void update(UpdateNewsErrors errors)
+  void synchronize(UpdateNewsErrors errors)
   {
     // ...
   }
@@ -15,17 +15,24 @@ class NewsRepository
   /// Returns the last sync date with news channels
   ///
   /// Returns `null` if sync was never completed at least once.
-  DateTime getLastUpdateTime()
+  DateTime getLastSynchronizationDate()
   {
     // ...
   }
 
-  /// Retrieves information about certain news.
+  /// Retrieves news' information
   ///
   /// Returns `null` if error occurred or news was not found.
   NewsDetails? get(String newsId)
   {
 
+  }
+
+  /// Updates [newsItem]
+  ///
+  /// If [newsItem] not exists, nothing will happen.
+  void update(NewsDetails newsItem)
+  {
   }
 
   /// Retrieves a list of relevant news from news channel

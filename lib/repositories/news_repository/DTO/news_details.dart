@@ -7,7 +7,7 @@ class NewsDetails
   final DateTime _publishedAt;
   final String _content;
   final String _url;
-  final bool _isWatched;
+  bool _isWatched;
 
   NewsDetails({required String id, required String title, required String author, required DateTime publishedAt, required String content, required String url, required bool isWatched}) : _id = id, _title = title, _author = author, _publishedAt = publishedAt, _content = content, _url = url, _isWatched = isWatched;
 
@@ -18,4 +18,5 @@ class NewsDetails
   String getContent() => _content;
   String getURL() => _url;
   bool isWatched() => _isWatched;
+  void markAsWatched() => _isWatched = true;
 }
