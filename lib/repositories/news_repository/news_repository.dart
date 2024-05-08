@@ -1,16 +1,13 @@
 // ignore_for_file: curly_braces_in_flow_control_structures
 
-import 'dart:math';
-
-import 'package:lab_news_4/repositories/news_repository/DTO/news_list_item.dart';
-import 'package:lab_news_4/repositories/news_repository/news_filter.dart';
-
 import 'DTO/news_details.dart';
 import 'errors/find_news_errors.dart';
 import 'errors/update_news_errors.dart';
 import 'view_models/find_news_view_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:lab_news_4/repositories/enums/news_channel.dart';
+import 'package:lab_news_4/repositories/news_repository/news_filter.dart';
+import 'package:lab_news_4/repositories/news_repository/DTO/news_list_item.dart';
 import 'package:lab_news_4/repositories/news_repository/news_cache/news_cache.dart';
 import 'package:lab_news_4/repositories/news_repository/rss_downloader/rss_downloader.dart';
 import 'package:lab_news_4/repositories/news_repository/rss_downloader/errors/rss_fetch_errors.dart';
@@ -112,28 +109,31 @@ class NewsRepository
                           FindNewsViewModel search,
                           FindNewsErrors errors)
   {
-    List<NewsListItem> newsList = _convertNewsDetailsToListItems(_news!.getAll());
+    List<NewsDetails> news = _news!.getAll();
 
     // Filtering news
     NewsFilter filter = NewsFilter();
-    filter.byChannel(newsList, channel);
+    filter.byChannel(news, channel);
     if (search.query != null)
-      filter.byQuery(newsList, search.query!);
+      filter.byQuery(news, search.query!);
     if ((search.from != null) || (search.to != null))
     {
-      final minDate = DateTime.utc(-271821,04,20);
-      final maxDate = DateTime.utc(275760,09,13);
-
       if ((search.from != null) && (search.to != null))
-        filter.byDate(newsList, search.from!, search.to!);
+        filter.byDate(news, search.from!, search.to!);
       else if (search.from != null)
-        filter.byDate(newsList, search.from!, maxDate);
+      {
+        DateTime maxDate = DateTime.utc(275760,09,13);
+        filter.byDate(news, search.from!, maxDate);
+      }
       else
-        filter.byDate(newsList, minDate, search.to!);
+      {
+        DateTime minDate = DateTime.utc(-271821,04,20);
+        filter.byDate(news, minDate, search.to!);
+      }
     }
     if (search.ignoreWatchedNews)
-      filter.onlyNotWatched(newsList);
+      filter.onlyNotWatched(news);
 
-    return newsList;
+    return _convertNewsDetailsToListItems(news);
   }
 }
