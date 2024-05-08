@@ -4,7 +4,6 @@ import 'DTO/news_details.dart';
 import 'errors/find_news_errors.dart';
 import 'errors/update_news_errors.dart';
 import 'view_models/find_news_view_model.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:lab_news_4/repositories/enums/news_channel.dart';
 import 'package:lab_news_4/repositories/news_repository/news_filter.dart';
 import 'package:lab_news_4/repositories/news_repository/DTO/news_list_item.dart';
@@ -16,7 +15,6 @@ import 'package:lab_news_4/repositories/news_repository/rss_downloader/errors/rs
 class NewsRepository
 {
   NewsCache? _news;
-  SharedPreferences? _prefs;
 
   Future<void> init() async
   {
@@ -25,21 +23,6 @@ class NewsRepository
 
     _news = NewsCache();
     await _news!.init();
-
-    _prefs = await SharedPreferences.getInstance();
-  }
-
-  Future<void> _setSynchronizationDate() async
-  {
-    await _prefs!.setString('sync_date', DateTime.now().toIso8601String());
-  }
-
-  DateTime? _getSynchronizationDate()
-  {
-    String? syncDateStr = _prefs!.getString('sync_date');
-    if (syncDateStr == null)
-      return null;
-    return DateTime.parse(syncDateStr);
   }
 
   /// Synchronizes the stored data with the data from news channels
@@ -63,15 +46,6 @@ class NewsRepository
     }
 
     await _news!.add(newsList);
-    await _setSynchronizationDate();
-  }
-
-  /// Returns the last sync date with news channels
-  ///
-  /// Returns `null` if sync was never completed at least once.
-  DateTime? getLastSynchronizationDate()
-  {
-    return _getSynchronizationDate();
   }
 
   /// Retrieves news' information
