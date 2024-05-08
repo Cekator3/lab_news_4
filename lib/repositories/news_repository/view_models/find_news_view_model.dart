@@ -6,8 +6,5 @@ class FindNewsViewModel
   final DateTime? to;
   late final bool ignoreWatchedNews;
 
-  FindNewsViewModel(this.query, this.from, this.to, bool? ignoreWatchedNews)
-  {
-    this.ignoreWatchedNews = ignoreWatchedNews ?? false;
-  }
+  FindNewsViewModel(this.query, this.from, this.to, this.ignoreWatchedNews);
 }

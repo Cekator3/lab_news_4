@@ -1,19 +1,9 @@
 // ignore_for_file: curly_braces_in_flow_control_structures
 
+import 'package:lab_news_4/UI/news_page/news_page.dart';
 import 'package:lab_news_4/repositories/enums/news_channel.dart';
-import 'package:lab_news_4/repositories/news_repository/errors/find_news_errors.dart';
-import 'package:lab_news_4/repositories/news_repository/errors/update_news_errors.dart';
-import 'package:lab_news_4/repositories/news_repository/news_cache/news_cache.dart';
-import 'package:lab_news_4/repositories/news_repository/news_repository.dart';
-import 'package:lab_news_4/repositories/news_repository/rss_downloader/errors/rss_fetch_errors.dart';
-import 'package:lab_news_4/repositories/news_repository/rss_downloader/rss_downloader.dart';
-import 'package:lab_news_4/repositories/news_repository/view_models/find_news_view_model.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:url_launcher/url_launcher_string.dart';
-
-import 'repositories/news_repository/news_cache/news_cache.dart';
 
 class NewsApp extends StatefulWidget
 {
@@ -75,8 +65,8 @@ class NewsAppState extends State<NewsApp>
           body: IndexedStack(
             index: currentIndex,
             children: const [
-              // PlacesPage(),
-              // FavoritePlacesPage()
+              NewsPage(channel: NewsChannel.archLinux),
+              NewsPage(channel: NewsChannel.habr)
             ],
           ),
           bottomNavigationBar: BottomNavigationBar(
@@ -85,12 +75,12 @@ class NewsAppState extends State<NewsApp>
             selectedItemColor: Colors.cyan,
             items: const <BottomNavigationBarItem>[
               BottomNavigationBarItem(
-                icon: Icon(Icons.home),
-                label: 'Главная',
+                icon: Icon(Icons.newspaper),
+                label: 'Arch linux',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.remove_red_eye),
-                label: 'Просмотренное',
+                icon: Icon(Icons.newspaper),
+                label: 'Habr',
               ),
             ],
           ),
@@ -103,14 +93,4 @@ void main() async
 {
   NewsApp app = const NewsApp();
   runApp(app);
-
-  final news = NewsRepository();
-  final errors = UpdateNewsErrors();
-  await news.init();
-  await news.synchronize(errors);
-  DateTime syncDate = news.getLastSynchronizationDate()!;
-  final errors2 = FindNewsErrors();
-  final search = FindNewsViewModel('Arch Linux', null, null, null);
-  final newsList = news.find(NewsChannel.archLinux, search, errors2);
-  print('lol');
 }
