@@ -15,8 +15,8 @@ import 'package:lab_news_4/repositories/news_repository/rss_downloader/errors/rs
 /// A subsystem for interacting with stored data on news.
 class NewsRepository
 {
-  late final NewsCache? _news;
-  late final SharedPreferences? _prefs;
+  NewsCache? _news;
+  SharedPreferences? _prefs;
 
   Future<void> init() async
   {
@@ -114,8 +114,6 @@ class NewsRepository
     // Filtering news
     NewsFilter filter = NewsFilter();
     filter.byChannel(news, channel);
-    if (search.query != null)
-      filter.byQuery(news, search.query!);
     if ((search.from != null) || (search.to != null))
     {
       if ((search.from != null) && (search.to != null))
@@ -133,6 +131,8 @@ class NewsRepository
     }
     if (search.ignoreWatchedNews)
       filter.onlyNotWatched(news);
+    if (search.query != null)
+      filter.byQuery(news, search.query!);
 
     return _convertNewsDetailsToListItems(news);
   }

@@ -1,9 +1,13 @@
 // ignore_for_file: curly_braces_in_flow_control_structures
 
 import 'package:lab_news_4/repositories/enums/news_channel.dart';
+import 'package:lab_news_4/repositories/news_repository/errors/find_news_errors.dart';
+import 'package:lab_news_4/repositories/news_repository/errors/update_news_errors.dart';
 import 'package:lab_news_4/repositories/news_repository/news_cache/news_cache.dart';
+import 'package:lab_news_4/repositories/news_repository/news_repository.dart';
 import 'package:lab_news_4/repositories/news_repository/rss_downloader/errors/rss_fetch_errors.dart';
 import 'package:lab_news_4/repositories/news_repository/rss_downloader/rss_downloader.dart';
+import 'package:lab_news_4/repositories/news_repository/view_models/find_news_view_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -100,13 +104,13 @@ void main() async
   NewsApp app = const NewsApp();
   runApp(app);
 
-  final rss = RssDownloader();
-  final errors = RssFetchErrors();
-  final news = await rss.fetch(NewsChannel.archLinux, errors);
-
-  final cache = NewsCache();
-  await cache.init();
-  cache.add(news);
-  final newsFromCache = cache.getAll();
+  final news = NewsRepository();
+  final errors = UpdateNewsErrors();
+  await news.init();
+  await news.synchronize(errors);
+  DateTime syncDate = news.getLastSynchronizationDate()!;
+  final errors2 = FindNewsErrors();
+  final search = FindNewsViewModel('Arch Linux', null, null, null);
+  final newsList = news.find(NewsChannel.archLinux, search, errors2);
   print('lol');
 }

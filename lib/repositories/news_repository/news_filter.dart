@@ -1,16 +1,19 @@
-import 'package:lab_news_4/repositories/news_repository/DTO/news_details.dart';
-
-import 'DTO/news_list_item.dart';
+import 'DTO/news_details.dart';
 import '../enums/news_channel.dart';
 
 /// Subsystem for filtering news list
 /// TODO speed improve: removeWhere with all conditions that user needs
 class NewsFilter
 {
+  bool _containsWord(NewsDetails newsItem, String query)
+  {
+    return newsItem.getTitle().contains(query, 0) ||
+           newsItem.getContent().contains(query, 0);
+  }
+
   void byQuery(List<NewsDetails> news, String query)
   {
-    news.removeWhere((newsItem) => newsItem.getTitle().contains(query, 0) ||
-                                   newsItem.getContent().contains(query, 0));
+    news.removeWhere((newsItem) => ! _containsWord(newsItem, query));
   }
 
   void byChannel(List<NewsDetails> news, NewsChannel channel)
