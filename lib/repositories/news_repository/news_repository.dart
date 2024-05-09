@@ -59,12 +59,12 @@ class NewsRepository
     return null;
   }
 
-  /// Updates [newsItem]
+  /// Marks [newsItem] as watched by user
   ///
   /// If [newsItem] not exists, nothing will happen.
-  Future<void> update(NewsDetails newsItem) async
+  Future<void> markAsWatched(NewsDetails newsItem) async
   {
-    await _news!.update(newsItem);
+    await _news!.markAsWatched(newsItem);
   }
 
   List<NewsListItem> _convertNewsDetailsToListItems(List<NewsDetails> news)

@@ -27,8 +27,8 @@ class NewsCache
   /// Retrieves all news
 	List<NewsDetails> getAll()
   {
-    // TODO how to not return pointer but return deep clone of the list?
-    return _storage!.getAll();
+    // returning shallow clone of the list
+    return List<NewsDetails>.from(_news);
   }
 
   bool _exists(NewsDetails newsItem)
@@ -56,10 +56,10 @@ class NewsCache
       await _storage!.set(_news);
   }
 
-  /// Updates certain news
+  /// Marks [newsItem] as watched by user
   ///
   /// If [newsItem] not exists, nothing will happen.
-  Future<void> update(NewsDetails newsItem) async
+  Future<void> markAsWatched(NewsDetails newsItem) async
   {
     if (! _exists(newsItem))
       return;
