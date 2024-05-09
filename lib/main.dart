@@ -4,10 +4,13 @@ import 'package:lab_news_4/UI/news_page/news_page.dart';
 import 'package:lab_news_4/repositories/enums/news_channel.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lab_news_4/repositories/news_repository/news_repository.dart';
 
 class NewsApp extends StatefulWidget
 {
-  const NewsApp({super.key});
+  final NewsRepository news;
+
+  const NewsApp({super.key, required this.news});
 
   @override
   NewsAppState createState() => NewsAppState();
@@ -64,9 +67,15 @@ class NewsAppState extends State<NewsApp>
         home: Scaffold(
           body: IndexedStack(
             index: currentIndex,
-            children: const [
-              NewsPage(channel: NewsChannel.archLinux),
-              NewsPage(channel: NewsChannel.habr)
+            children: [
+              NewsPage(
+                channel: NewsChannel.archLinux,
+                news: widget.news
+              ),
+              NewsPage(
+                channel: NewsChannel.habr,
+                news: widget.news
+              ),
             ],
           ),
           bottomNavigationBar: BottomNavigationBar(
@@ -91,6 +100,9 @@ class NewsAppState extends State<NewsApp>
 
 void main() async
 {
-  NewsApp app = const NewsApp();
+  NewsRepository news = NewsRepository();
+  await news.init();
+
+  NewsApp app = NewsApp(news: news);
   runApp(app);
 }

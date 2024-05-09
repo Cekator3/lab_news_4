@@ -11,8 +11,9 @@ import 'package:lab_news_4/repositories/news_repository/view_models/find_news_vi
 class NewsPage extends StatefulWidget
 {
   final NewsChannel channel;
+  final NewsRepository news;
 
-  const NewsPage({super.key, required this.channel});
+  const NewsPage({super.key, required this.channel, required this.news});
 
   @override
   NewsPageState createState() => NewsPageState();
@@ -20,9 +21,7 @@ class NewsPage extends StatefulWidget
 
 class NewsPageState extends State<NewsPage>
 {
-  final _news = NewsRepository();
   List<NewsListItem> _newsList = [];
-  final _searchQueryController = TextEditingController();
   String? _searchQuery;
   DateTime? _searchFrom;
   DateTime? _searchTo;
@@ -31,7 +30,7 @@ class NewsPageState extends State<NewsPage>
   void _synchronizeNews() async
   {
     final errors = UpdateNewsErrors();
-    await _news.synchronize(errors);
+    await widget.news.synchronize(errors);
 
     if (errors.hasAny())
     {
@@ -42,10 +41,8 @@ class NewsPageState extends State<NewsPage>
     _performSearch();
   }
 
-  void _performSearch() async
+  void _performSearch()
   {
-    final news = NewsRepository();
-    await news.init();
     final search = FindNewsViewModel(
       _searchQuery,
       _searchFrom,
@@ -53,7 +50,7 @@ class NewsPageState extends State<NewsPage>
       _searchIgnoreWatchedNews
     );
     final errors = FindNewsErrors();
-    List<NewsListItem> newsList = _news.find(widget.channel, search, errors);
+    List<NewsListItem> newsList = widget.news.find(widget.channel, search, errors);
 
     if (errors.hasAny())
     {
@@ -71,13 +68,10 @@ class NewsPageState extends State<NewsPage>
   void initState()
   {
     super.initState();
-    () async
-    {
-      await _news.init();
-      _performSearch();
-      if (_newsList.isEmpty)
-        _synchronizeNews();
-    } ();
+
+    _performSearch();
+    if (_newsList.isEmpty)
+      _synchronizeNews();
   }
 
   @override
@@ -98,7 +92,6 @@ class NewsPageState extends State<NewsPage>
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             TextField(
-              controller: _searchQueryController,
               decoration: const InputDecoration(
                 hintText: 'Поиск...'
               ),
