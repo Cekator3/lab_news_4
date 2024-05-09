@@ -36,7 +36,7 @@ class NewsAppState extends State<NewsApp>
         theme: ThemeData(
             useMaterial3: true,
             colorScheme: const ColorScheme.light(
-                onSurface: Colors.white,
+                // onSurface: Colors.white,
                 onBackground: Colors.cyan,
             ),
             textTheme: GoogleFonts.manropeTextTheme(
