@@ -20,6 +20,7 @@ class NewsPage extends StatefulWidget
 
 class NewsPageState extends State<NewsPage>
 {
+  final _news = NewsRepository();
   List<NewsListItem> _newsList = [];
   final _searchQueryController = TextEditingController();
   String? _searchQuery;
@@ -27,11 +28,24 @@ class NewsPageState extends State<NewsPage>
   DateTime? _searchTo;
   bool _searchIgnoreWatchedNews = false;
 
-  Future<void> _performSearch() async
+  void _synchronizeNews() async
+  {
+    final errors = UpdateNewsErrors();
+    await _news.synchronize(errors);
+
+    if (errors.hasAny())
+    {
+      /// TODO error handling
+      return;
+    }
+
+    _performSearch();
+  }
+
+  void _performSearch() async
   {
     final news = NewsRepository();
     await news.init();
-    await news.synchronize(UpdateNewsErrors());
     final search = FindNewsViewModel(
       _searchQuery,
       _searchFrom,
@@ -39,7 +53,7 @@ class NewsPageState extends State<NewsPage>
       _searchIgnoreWatchedNews
     );
     final errors = FindNewsErrors();
-    List<NewsListItem> newsList = news.find(widget.channel, search, errors);
+    List<NewsListItem> newsList = _news.find(widget.channel, search, errors);
 
     if (errors.hasAny())
     {
@@ -57,7 +71,13 @@ class NewsPageState extends State<NewsPage>
   void initState()
   {
     super.initState();
-    _performSearch();
+    () async
+    {
+      await _news.init();
+      _performSearch();
+      if (_newsList.isEmpty)
+        _synchronizeNews();
+    } ();
   }
 
   @override
@@ -82,6 +102,13 @@ class NewsPageState extends State<NewsPage>
               decoration: const InputDecoration(
                 hintText: 'Поиск...'
               ),
+              onChanged: (value)
+              {
+                setState(() {
+                  _searchQuery = value;
+                });
+                _performSearch();
+              },
             ),
             const SizedBox(height: 10),
 
@@ -101,26 +128,29 @@ class NewsPageState extends State<NewsPage>
             ),
             CheckboxListTile(
               title: const Text(
-                'Только не просмотренные',
+                'Убрать просмотренные',
                 style: TextStyle(
                   color: Colors.black,
                   fontSize: 16
                 ),
               ),
               value: _searchIgnoreWatchedNews,
-              onChanged: (value) {
-                setState(() {
+              onChanged: (value)
+              {
+                setState(()
+                {
                   _searchIgnoreWatchedNews = !_searchIgnoreWatchedNews;
                 });
+                _performSearch();
               },
               controlAffinity: ListTileControlAffinity.leading,
             ),
 
             // Submit button
             ElevatedButton(
-              onPressed: () {},
-              child: const Text('Поиск'),
-            )
+              onPressed: _synchronizeNews,
+              child: const Text('Синхронизировать новости'),
+            ),
           ],
         ),
       )
