@@ -64,6 +64,16 @@ class NewsPageState extends State<NewsPage>
     });
   }
 
+  Future<DateTime?> _negotiateDate(DateTime initialDate) async
+  {
+    return await showDatePicker(
+      context: context,
+      initialDate: initialDate,
+      firstDate: DateTime(2000, 1, 1),
+      lastDate: DateTime.now(),
+    );
+  }
+
   @override
   void initState()
   {
@@ -109,13 +119,35 @@ class NewsPageState extends State<NewsPage>
             Row(
               children: [
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () async
+                  {
+                    final date = await _negotiateDate(_searchFrom ?? DateTime.now());
+                    if ((date != null) && (date != _searchFrom))
+                    {
+                      setState(()
+                      {
+                        _searchFrom = date;
+                      });
+                      _performSearch();
+                    }
+                  },
                   child: Text("С: ${_searchFrom?.toString().substring(0, 10) ?? "дата начала"}")
                 ),
                 const SizedBox(width: 20),
                 TextButton(
-                  onPressed: () {},
-                  child: Text("До: ${_searchFrom?.toString().substring(0, 10) ?? "дата конца"}")
+                  onPressed: () async
+                  {
+                    final date = await _negotiateDate(_searchTo ?? DateTime.now());
+                    if ((date != null) && (date != _searchTo))
+                    {
+                      setState(()
+                      {
+                        _searchTo = date;
+                      });
+                      _performSearch();
+                    }
+                  },
+                  child: Text("До: ${_searchTo?.toString().substring(0, 10) ?? "дата конца"}")
                 ),
               ],
             ),

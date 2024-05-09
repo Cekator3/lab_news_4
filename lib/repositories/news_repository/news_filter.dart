@@ -30,7 +30,7 @@ class NewsFilter
 	// Filters news by date
 	void byDate(List<NewsDetails> news, DateTime from, DateTime to)
   {
-    news.removeWhere((element) => _isBetweenDates(element.getPublicationDate(), from, to));
+    news.removeWhere((element) => ! _isBetweenDates(element.getPublicationDate(), from, to));
   }
 
 	/// Removes watched news
