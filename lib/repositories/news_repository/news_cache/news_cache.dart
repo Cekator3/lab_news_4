@@ -6,20 +6,17 @@ import 'news_persistent_storage/news_persistent_storage.dart';
 /// A subsystem for interacting with locally stored news data
 class NewsCache
 {
-  static late final List<NewsDetails> _news;
-  static late final List<String> _newsIdentifiers;
+  static List<NewsDetails> _news = [];
+  static List<String> _newsIdentifiers = [];
   static NewsPersistentStorage? _storage;
-
-  bool _isInitialized()
-  {
-    return _storage != null;
-  }
+  static bool _isInitialized = false;
 
   /// Initializes the [NewsCache]
   Future<void> init() async
   {
-    if (_isInitialized())
+    if (_isInitialized)
       return;
+    _isInitialized = true;
 
     _storage = NewsPersistentStorage();
     await _storage!.init();
@@ -30,7 +27,8 @@ class NewsCache
   /// Retrieves all news
 	List<NewsDetails> getAll()
   {
-    return _news;
+    // TODO how to not return pointer but return deep clone of the list?
+    return _storage!.getAll();
   }
 
   bool _exists(NewsDetails newsItem)
@@ -43,6 +41,7 @@ class NewsCache
   /// If [news] already exists, it will be ignored.
 	Future<void> add(List<NewsDetails> news) async
   {
+    int lenBefore = _newsIdentifiers.length;
     for (NewsDetails newsItem in news)
     {
       if (_exists(newsItem))
@@ -51,8 +50,10 @@ class NewsCache
       _newsIdentifiers.add(newsItem.getId());
       _news.add(newsItem);
     }
+    int lenAfter = _newsIdentifiers.length;
 
-    await _storage!.set(_news);
+    if (lenBefore != lenAfter)
+      await _storage!.set(_news);
   }
 
   /// Updates certain news
