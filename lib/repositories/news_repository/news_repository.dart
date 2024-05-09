@@ -15,11 +15,14 @@ import 'package:lab_news_4/repositories/news_repository/rss_downloader/errors/rs
 class NewsRepository
 {
   NewsCache? _news;
+  bool _isInitialized = false;
 
+  /// Initializes [NewsRepository]
   Future<void> init() async
   {
-    if (_news != null)
+    if (_isInitialized)
       return;
+    _isInitialized = true;
 
     _news = NewsCache();
     await _news!.init();
@@ -28,6 +31,9 @@ class NewsRepository
   /// Synchronizes the stored data with the data from news channels
   Future<void> synchronize(UpdateNewsErrors errors) async
   {
+    if (! _isInitialized)
+      throw Exception('NewsRepository not initialized');
+
     List<NewsDetails> newsList = [];
     final rss = RssDownloader();
     for (NewsChannel channel in NewsChannel.values)
@@ -53,6 +59,9 @@ class NewsRepository
   /// Returns `null` if error occurred or news was not found.
   NewsDetails? get(String newsId)
   {
+    if (! _isInitialized)
+      throw Exception('NewsRepository not initialized');
+
     for (NewsDetails newsItem in _news!.getAll())
       if (newsItem.getId() == newsId)
         return newsItem;
@@ -64,6 +73,9 @@ class NewsRepository
   /// If [newsItem] not exists, nothing will happen.
   Future<void> markAsWatched(NewsDetails newsItem) async
   {
+    if (! _isInitialized)
+      throw Exception('NewsRepository not initialized');
+
     await _news!.markAsWatched(newsItem);
   }
 
@@ -83,6 +95,9 @@ class NewsRepository
                           FindNewsViewModel search,
                           FindNewsErrors errors)
   {
+    if (! _isInitialized)
+      throw Exception('NewsRepository not initialized');
+
     List<NewsDetails> news = _news!.getAll();
 
     // Filtering news
