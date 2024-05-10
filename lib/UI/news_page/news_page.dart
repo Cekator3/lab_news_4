@@ -8,6 +8,12 @@ import 'package:lab_news_4/repositories/news_repository/errors/update_news_error
 import 'package:lab_news_4/repositories/news_repository/news_repository.dart';
 import 'package:lab_news_4/repositories/news_repository/view_models/find_news_view_model.dart';
 
+enum LoadingStatus
+{
+  loading,
+  notLoading,
+}
+
 class NewsPage extends StatefulWidget
 {
   final NewsChannel channel;
@@ -26,6 +32,7 @@ class NewsPageState extends State<NewsPage>
   DateTime? _searchFrom;
   DateTime? _searchTo;
   bool _searchIgnoreWatchedNews = false;
+  LoadingStatus _loadingStatus = LoadingStatus.notLoading;
 
   void showErrorMessage(String message)
   {
@@ -38,6 +45,10 @@ class NewsPageState extends State<NewsPage>
 
   void _synchronizeNews() async
   {
+    setState(() {
+      _loadingStatus = LoadingStatus.loading;
+    });
+
     final errors = UpdateNewsErrors();
     await widget.news.synchronize(errors);
 
@@ -47,10 +58,14 @@ class NewsPageState extends State<NewsPage>
         showErrorMessage('Отсутствует интернет-соединение');
       if (errors.isInternalErrorOccurred())
         showErrorMessage('В приложении произошла критическая ошибка. Разработчики уже были оповещены.');
+
       return;
     }
 
     _performSearch();
+    setState(() {
+      _loadingStatus = LoadingStatus.notLoading;
+    });
   }
 
   void _performSearch()
@@ -77,6 +92,26 @@ class NewsPageState extends State<NewsPage>
       firstDate: DateTime(2000, 1, 1),
       lastDate: DateTime.now(),
     );
+  }
+
+  Widget _getNewsList()
+  {
+    switch (_loadingStatus)
+    {
+      case LoadingStatus.loading:
+        return const Center(child: CircularProgressIndicator());
+
+      case LoadingStatus.notLoading:
+        if (_newsList.isNotEmpty)
+        {
+          return NewsListWidget(newsList: _newsList);
+        }
+
+        if ((_searchQuery == null) || _searchQuery!.isEmpty)
+          return const Center(child: Text('Для загрузки новостей необходимо подключение к Интернету'));
+        else
+          return const Center(child: Text('Ничего не было найдено'));
+    }
   }
 
   @override
@@ -188,7 +223,7 @@ class NewsPageState extends State<NewsPage>
           ),
 
           Expanded(
-            child: NewsListWidget(newsList: _newsList),
+            child: _getNewsList(),
           ),
         ],
       )
