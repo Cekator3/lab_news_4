@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:lab_news_4/UI/news_details_page/news_details_page.dart';
 import 'package:lab_news_4/repositories/news_repository/DTO/news_list_item.dart';
+import 'package:lab_news_4/repositories/news_repository/news_repository.dart';
 
 /// A subsystem for displaying "List of news" widget of "news" page to the user.
 class NewsListWidget extends StatelessWidget
 {
+  final NewsRepository news;
   final List<NewsListItem> newsList;
 
-  const NewsListWidget({super.key, required this.newsList});
+  const NewsListWidget({super.key, required this.news, required this.newsList});
 
   @override
   Widget build(BuildContext context)
@@ -49,12 +52,12 @@ class NewsListWidget extends StatelessWidget
                 ),
                 onTap: ()
                 {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //     builder: (context) => PlaceDetailsPage(placeId: newsItem.getId())
-                  //   ),
-                  // );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => NewsDetailsPage(newsItemId: newsItem.getId(), news: news)
+                    ),
+                  );
                 },
               ),
             );

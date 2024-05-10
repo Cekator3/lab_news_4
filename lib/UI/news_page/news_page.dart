@@ -104,7 +104,7 @@ class NewsPageState extends State<NewsPage>
       case LoadingStatus.notLoading:
         if (_newsList.isNotEmpty)
         {
-          return NewsListWidget(newsList: _newsList);
+          return NewsListWidget(newsList: _newsList, news: widget.news);
         }
 
         if ((_searchQuery == null) || _searchQuery!.isEmpty)
