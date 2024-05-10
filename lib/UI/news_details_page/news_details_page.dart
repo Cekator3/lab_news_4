@@ -31,18 +31,14 @@ class NewsDetailsPageState extends State<NewsDetailsPage>
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
-  Future<void> _initPlaceDetails() async
-  {
-    setState(() {
-      _newsItem = widget.news.get(widget.newsItemId);
-    });
-  }
-
   @override
   void initState()
   {
     super.initState();
-    _initPlaceDetails();
+    setState(() {
+      _newsItem = widget.news.get(widget.newsItemId);
+    });
+    widget.news.markAsWatched(_newsItem!);
   }
 
   String? _getTitle()

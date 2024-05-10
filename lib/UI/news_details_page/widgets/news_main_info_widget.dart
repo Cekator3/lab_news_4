@@ -3,7 +3,6 @@ import 'package:flutter_html_v3/flutter_html.dart';
 import 'package:intl/intl.dart';
 import 'package:lab_news_4/repositories/news_repository/DTO/news_details.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 
 /// A subsystem for displaying widget with general information about food
 /// on the "Place details" page for the user.
