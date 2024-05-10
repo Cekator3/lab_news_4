@@ -1,6 +1,7 @@
 // ignore_for_file: curly_braces_in_flow_control_structures
 
 import 'package:flutter/material.dart';
+import 'package:lab_news_4/UI/news_page/widgets/news_list.dart';
 import 'package:lab_news_4/repositories/enums/news_channel.dart';
 import 'package:lab_news_4/repositories/news_repository/DTO/news_list_item.dart';
 import 'package:lab_news_4/repositories/news_repository/errors/find_news_errors.dart';
@@ -91,93 +92,101 @@ class NewsPageState extends State<NewsPage>
       appBar: AppBar(
         title: const Text('Новости'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.only(
-          left: 30,
-          right: 30,
-          top: 0,
-          bottom: 0
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            TextField(
-              decoration: const InputDecoration(
-                hintText: 'Поиск...'
-              ),
-              onChanged: (value)
-              {
-                setState(() {
-                  _searchQuery = value;
-                });
-                _performSearch();
-              },
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(
+              left: 30,
+              right: 30,
+              top: 0,
+              bottom: 0
             ),
-            const SizedBox(height: 10),
-
-            // Filters
-            Row(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                TextButton(
-                  onPressed: () async
+                TextField(
+                  decoration: const InputDecoration(
+                    hintText: 'Поиск...'
+                  ),
+                  onChanged: (value)
                   {
-                    final date = await _negotiateDate(_searchFrom ?? DateTime.now());
-                    if ((date != null) && (date != _searchFrom))
-                    {
-                      setState(()
-                      {
-                        _searchFrom = date;
-                      });
-                      _performSearch();
-                    }
+                    setState(() {
+                      _searchQuery = value;
+                    });
+                    _performSearch();
                   },
-                  child: Text("С: ${_searchFrom?.toString().substring(0, 10) ?? "дата начала"}")
                 ),
-                const SizedBox(width: 20),
-                TextButton(
-                  onPressed: () async
-                  {
-                    final date = await _negotiateDate(_searchTo ?? DateTime.now());
-                    if ((date != null) && (date != _searchTo))
-                    {
-                      setState(()
+                const SizedBox(height: 10),
+
+                // Filters
+                Row(
+                  children: [
+                    TextButton(
+                      onPressed: () async
                       {
-                        _searchTo = date;
-                      });
-                      _performSearch();
-                    }
+                        final date = await _negotiateDate(_searchFrom ?? DateTime.now());
+                        if ((date != null) && (date != _searchFrom))
+                        {
+                          setState(()
+                          {
+                            _searchFrom = date;
+                          });
+                          _performSearch();
+                        }
+                      },
+                      child: Text("С: ${_searchFrom?.toString().substring(0, 10) ?? "дата начала"}")
+                    ),
+                    const SizedBox(width: 20),
+                    TextButton(
+                      onPressed: () async
+                      {
+                        final date = await _negotiateDate(_searchTo ?? DateTime.now());
+                        if ((date != null) && (date != _searchTo))
+                        {
+                          setState(()
+                          {
+                            _searchTo = date;
+                          });
+                          _performSearch();
+                        }
+                      },
+                      child: Text("До: ${_searchTo?.toString().substring(0, 10) ?? "дата конца"}")
+                    ),
+                  ],
+                ),
+                CheckboxListTile(
+                  title: const Text(
+                    'Убрать просмотренные',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 16
+                    ),
+                  ),
+                  value: _searchIgnoreWatchedNews,
+                  onChanged: (value)
+                  {
+                    setState(()
+                    {
+                      _searchIgnoreWatchedNews = !_searchIgnoreWatchedNews;
+                    });
+                    _performSearch();
                   },
-                  child: Text("До: ${_searchTo?.toString().substring(0, 10) ?? "дата конца"}")
+                  controlAffinity: ListTileControlAffinity.leading,
+                ),
+
+                // Submit button
+                ElevatedButton(
+                  onPressed: _synchronizeNews,
+                  child: const Text('Синхронизировать новости'),
                 ),
               ],
             ),
-            CheckboxListTile(
-              title: const Text(
-                'Убрать просмотренные',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 16
-                ),
-              ),
-              value: _searchIgnoreWatchedNews,
-              onChanged: (value)
-              {
-                setState(()
-                {
-                  _searchIgnoreWatchedNews = !_searchIgnoreWatchedNews;
-                });
-                _performSearch();
-              },
-              controlAffinity: ListTileControlAffinity.leading,
-            ),
+          ),
 
-            // Submit button
-            ElevatedButton(
-              onPressed: _synchronizeNews,
-              child: const Text('Синхронизировать новости'),
-            ),
-          ],
-        ),
+          Expanded(
+            child: NewsListWidget(newsList: _newsList),
+          ),
+        ],
       )
     );
   }

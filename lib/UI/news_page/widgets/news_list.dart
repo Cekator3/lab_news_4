@@ -13,43 +13,54 @@ class NewsListWidget extends StatelessWidget
   Widget build(BuildContext context)
   {
     return Container(
-          padding: const EdgeInsets.all(16.0),
-          child: Container(
-            decoration: BoxDecoration(
-                color: Colors.grey[300],
-                borderRadius: BorderRadius.circular(10.0)
-            ),
-            padding: const EdgeInsets.all(16.0),
-            child: ListView.builder(
-                itemCount: newsList.length,
-                itemBuilder: (BuildContext context, int index)
-                {
-                  NewsListItem newsItem = newsList[index];
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 16),
-                    child: ListTile(
-                      title: Text(
-                        newsItem.getTitle(),
-                        style: const TextStyle(color: Colors.black),
-                      ),
-                      subtitle: Text(
-                        DateFormat.yMMMMd().add_Hm().format(newsItem.getPublicationDate()),
-                        style: const TextStyle(color: Colors.black),
-                      ),
-                      onTap: ()
-                      {
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //     builder: (context) => PlaceDetailsPage(placeId: newsItem.getId())
-                        //   ),
-                        // );
-                      },
-                    ),
-                  );
-                },
+      padding: const EdgeInsets.all(16.0),
+      child: Container(
+        decoration: BoxDecoration(
+            color: Colors.grey[300],
+            borderRadius: BorderRadius.circular(10.0)
+        ),
+        padding: const EdgeInsets.all(16.0),
+        child: ListView.builder(
+          scrollDirection: Axis.vertical,
+          shrinkWrap: true,
+          itemCount: newsList.length,
+          itemBuilder: (BuildContext context, int index)
+          {
+            NewsListItem newsItem = newsList[index];
+
+            newsItem.getId();
+            newsItem.getChannel();
+            newsItem.getTitle();
+            newsItem.getPublicationDate();
+
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 16),
+              child: ListTile(
+                title: Text(
+                  newsItem.getTitle(),
+                  style:
+                  TextStyle(
+                    fontWeight: newsItem.isWatched() ? FontWeight.normal : FontWeight.bold
                   ),
-          ),
+                ),
+                subtitle: Text(
+                  DateFormat('d MMMM y г. H:mm', 'ru').format(newsItem.getPublicationDate()),
+                  style: const TextStyle(color: Colors.black),
+                ),
+                onTap: ()
+                {
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //     builder: (context) => PlaceDetailsPage(placeId: newsItem.getId())
+                  //   ),
+                  // );
+                },
+              ),
+            );
+          },
+        ),
+      ),
     );
   }
 }

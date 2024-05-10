@@ -1,5 +1,6 @@
 // ignore_for_file: curly_braces_in_flow_control_structures
 
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:lab_news_4/UI/news_page/news_page.dart';
 import 'package:lab_news_4/repositories/enums/news_channel.dart';
 import 'package:flutter/material.dart';
@@ -100,8 +101,11 @@ class NewsAppState extends State<NewsApp>
 
 void main() async
 {
+  WidgetsFlutterBinding.ensureInitialized();
   NewsRepository news = NewsRepository();
   await news.init();
+
+  initializeDateFormatting('ru');
 
   NewsApp app = NewsApp(news: news);
   runApp(app);
