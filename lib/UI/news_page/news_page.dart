@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:lab_news_4/UI/news_page/widgets/news_list.dart';
 import 'package:lab_news_4/repositories/enums/news_channel.dart';
 import 'package:lab_news_4/repositories/news_repository/DTO/news_list_item.dart';
-import 'package:lab_news_4/repositories/news_repository/errors/find_news_errors.dart';
 import 'package:lab_news_4/repositories/news_repository/errors/update_news_errors.dart';
 import 'package:lab_news_4/repositories/news_repository/news_repository.dart';
 import 'package:lab_news_4/repositories/news_repository/view_models/find_news_view_model.dart';
