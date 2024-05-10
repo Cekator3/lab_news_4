@@ -28,6 +28,15 @@ class NewsPageState extends State<NewsPage>
   DateTime? _searchTo;
   bool _searchIgnoreWatchedNews = false;
 
+  void showErrorMessage(String message)
+  {
+    final snackBar = SnackBar(
+      content: Text(message),
+      backgroundColor: Colors.red,
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
   void _synchronizeNews() async
   {
     final errors = UpdateNewsErrors();
@@ -35,7 +44,10 @@ class NewsPageState extends State<NewsPage>
 
     if (errors.hasAny())
     {
-      /// TODO error handling
+      if (errors.isInternetConnectionMissing())
+        showErrorMessage('Отсутствует интернет-соединение');
+      if (errors.isInternalErrorOccurred())
+        showErrorMessage('В приложении произошла критическая ошибка. Разработчики уже были оповещены.');
       return;
     }
 
@@ -50,14 +62,7 @@ class NewsPageState extends State<NewsPage>
       _searchTo,
       _searchIgnoreWatchedNews
     );
-    final errors = FindNewsErrors();
-    List<NewsListItem> newsList = widget.news.find(widget.channel, search, errors);
-
-    if (errors.hasAny())
-    {
-      /// TODO error handling
-      return;
-    }
+    List<NewsListItem> newsList = widget.news.find(widget.channel, search);
 
     setState(()
     {

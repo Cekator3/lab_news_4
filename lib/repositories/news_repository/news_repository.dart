@@ -91,9 +91,7 @@ class NewsRepository
   /// Retrieves a list of relevant news from news channel
   ///
   /// Returns an empty list if error occurred.
-  List<NewsListItem> find(NewsChannel channel,
-                          FindNewsViewModel search,
-                          FindNewsErrors errors)
+  List<NewsListItem> find(NewsChannel channel, FindNewsViewModel search)
   {
     if (! _isInitialized)
       throw Exception('NewsRepository not initialized');
