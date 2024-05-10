@@ -47,7 +47,7 @@ class NewsListWidget extends StatelessWidget
                   ),
                 ),
                 subtitle: Text(
-                  DateFormat('d MMMM y г. H:mm', 'ru').format(newsItem.getPublicationDate()),
+                  DateFormat('d MMMM y г.', 'ru').format(newsItem.getPublicationDate()),
                   style: const TextStyle(color: Colors.black),
                 ),
                 onTap: ()

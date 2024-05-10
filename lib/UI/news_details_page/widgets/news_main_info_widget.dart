@@ -22,11 +22,21 @@ class NewsMainInfoWidget extends StatelessWidget
           children: [
             Title(
               color: Colors.black,
-              child: Text(_newsItem.getTitle()),
+              child: Text(
+                _newsItem.getTitle(),
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 24
+                ),
+              ),
             ),
             const SizedBox(height: 10),
             Text(
-              "${_newsItem.getAuthor()}, ${DateFormat('d MMMM y г. H:mm', 'ru').format(_newsItem.getPublicationDate())}"
+              "${_newsItem.getAuthor()}, ${DateFormat('d MMMM y г. H:mm', 'ru').format(_newsItem.getPublicationDate())}",
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18
+                ),
             ),
             SingleChildScrollView(
               child: Html(data: _newsItem.getContent()),

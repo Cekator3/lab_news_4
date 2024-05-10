@@ -18,7 +18,7 @@ class NewsDetails
   String getTitle() => _title;
   String getAuthor() => _author;
   NewsChannel getChannel() => _channel;
-  DateTime getPublicationDate() => _publishedAt;
+  DateTime getPublicationDate() => _publishedAt.toLocal();
   String getContent() => _content;
   String getURL() => _url;
   bool isWatched() => _isWatched;
