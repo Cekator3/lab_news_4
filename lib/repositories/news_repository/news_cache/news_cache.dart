@@ -36,6 +36,11 @@ class NewsCache
     return _newsIdentifiers.contains(newsItem.getId());
   }
 
+  void _sortByDate(List<NewsDetails> news)
+  {
+    news.sort((a, b) => b.getPublicationDate().compareTo(a.getPublicationDate()));
+  }
+
   /// Adds [news]
   ///
   /// If [news] already exists, it will be ignored.
@@ -52,8 +57,11 @@ class NewsCache
     }
     int lenAfter = _newsIdentifiers.length;
 
-    if (lenBefore != lenAfter)
-      await _storage!.set(_news);
+    if (lenBefore == lenAfter)
+      return;
+
+    _sortByDate(_news);
+    await _storage!.set(_news);
   }
 
   /// Marks [news] as watched by user
