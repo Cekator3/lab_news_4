@@ -1,5 +1,4 @@
 import 'package:lab_news_4/repositories/enums/news_channel.dart';
-import 'package:lab_news_4/repositories/news_repository/news_cache/news_cache.dart';
 
 /// A subsystem for reading data from the NewsRepository needed to
 /// generate a list of news
