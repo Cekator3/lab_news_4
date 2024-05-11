@@ -94,6 +94,13 @@ class NewsPageState extends State<NewsPage>
     );
   }
 
+  bool _isSearchFieldsEmpty()
+  {
+    return ((_searchQuery == null) || _searchQuery!.isEmpty) &&
+           (_searchFrom == null) &&
+           (_searchTo == null);
+  }
+
   Widget _getNewsList()
   {
     switch (_loadingStatus)
@@ -104,10 +111,10 @@ class NewsPageState extends State<NewsPage>
       case LoadingStatus.notLoading:
         if (_newsList.isNotEmpty)
         {
-          return NewsListWidget(newsList: _newsList, news: widget.news);
+          return NewsListWidget(newsList: _newsList, news: widget.news, updateNewsList: _performSearch);
         }
 
-        if ((_searchQuery == null) || _searchQuery!.isEmpty)
+        if (_isSearchFieldsEmpty())
           return const Center(child: Text('Для загрузки новостей необходимо подключение к Интернету'));
         else
           return const Center(child: Text('Ничего не было найдено'));

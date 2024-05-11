@@ -38,7 +38,7 @@ class NewsDetailsPageState extends State<NewsDetailsPage>
     setState(() {
       _newsItem = widget.news.get(widget.newsItemId);
     });
-    widget.news.markAsWatched(_newsItem!);
+    widget.news.markAsWatched(_newsItem!.getId());
   }
 
   String? _getTitle()

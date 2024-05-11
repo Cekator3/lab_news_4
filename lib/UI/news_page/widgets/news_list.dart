@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter/material.dart';
 import 'package:lab_news_4/UI/news_details_page/news_details_page.dart';
 import 'package:lab_news_4/repositories/news_repository/DTO/news_list_item.dart';
 import 'package:lab_news_4/repositories/news_repository/news_repository.dart';
@@ -9,8 +9,9 @@ class NewsListWidget extends StatelessWidget
 {
   final NewsRepository news;
   final List<NewsListItem> newsList;
+  final void Function() updateNewsList;
 
-  const NewsListWidget({super.key, required this.news, required this.newsList});
+  const NewsListWidget({super.key, required this.news, required this.newsList, required this.updateNewsList});
 
   @override
   Widget build(BuildContext context)
@@ -31,11 +32,6 @@ class NewsListWidget extends StatelessWidget
           {
             NewsListItem newsItem = newsList[index];
 
-            newsItem.getId();
-            newsItem.getChannel();
-            newsItem.getTitle();
-            newsItem.getPublicationDate();
-
             return Padding(
               padding: const EdgeInsets.only(bottom: 16),
               child: ListTile(
@@ -52,6 +48,8 @@ class NewsListWidget extends StatelessWidget
                 ),
                 onTap: ()
                 {
+                  news.markAsWatched(newsItem.getId());
+                  updateNewsList();
                   Navigator.push(
                     context,
                     MaterialPageRoute(

@@ -56,15 +56,16 @@ class NewsCache
       await _storage!.set(_news);
   }
 
-  /// Marks [newsItem] as watched by user
+  /// Marks [news] as watched by user
   ///
-  /// If [newsItem] not exists, nothing will happen.
-  Future<void> markAsWatched(NewsDetails newsItem) async
+  /// If [news] not exists, nothing will happen.
+  Future<void> markAsWatched(String newsId) async
   {
-    if (! _exists(newsItem))
+    // Check if exists
+    if (! _newsIdentifiers.contains(newsId))
       return;
 
-    int i = _news.indexWhere((item) => item.getId() == newsItem.getId());
+    int i = _news.indexWhere((item) => item.getId() == newsId);
     _news[i].markAsWatched();
 
     await _storage!.set(_news);
